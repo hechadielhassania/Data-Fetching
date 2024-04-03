@@ -1,0 +1,16 @@
+.animal-img {
+    height: 300px; /* Set a fixed height for the images */
+    width: auto; /* Let the width adjust automatically */
+}
+.result-container {
+    position: relative;
+}
+.result-text {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.7);
+    text-align: center;
+    padding: 5px;
+}

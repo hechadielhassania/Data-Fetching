@@ -1,33 +1,82 @@
-const dog = document.getElementById('dog');
-const cat = document.getElementById('cat');
+let dogScore = 0;
+        let catScore = 0;
+        let round = 0;
 
-dog.addEventListener("click", getNewDog);
-cat.addEventListener("click", getNewCat);
+        const dog = document.getElementById('dog');
+        const cat = document.getElementById('cat');
+        const dogResult = document.getElementById('dogResult');
+        const catResult = document.getElementById('catResult');
+        const dogVoteBtn = document.getElementById('dogVote');
+        const catVoteBtn = document.getElementById('catVote');
 
-async function getNewDog() {
-    dog.style.cursor = 'wait';
-    const response = await fetch("https://dog.ceo/api/breeds/image/random");
-    const jsonData = await response.json();
-    const url = jsonData.message;
+        dog.addEventListener("click", () => vote('dog'));
+        cat.addEventListener("click", () => vote('cat'));
 
-    dog.src = url;
-    dog.style.cursor = 'pointer';
-}
-
-async function getNewCat() {
-    cat.style.cursor = 'wait';
-    const response = await fetch("https://api.thecatapi.com/v1/images/search", {
-        headers: {
-            'x-api-key': 'live_j4U9P1tus6pCJkgLvEvldbtR584RY9guwoBaWsISPBiaJnsuHHCzQaWaWGeRCW7W'
+        async function getNewDog() {
+            const response = await fetch("https://dog.ceo/api/breeds/image/random");
+            const jsonData = await response.json();
+            const url = jsonData.message;
+            dog.src = url;
         }
-    });
-    const jsonData = await response.json();
-    const url = jsonData[0].url;
 
-    cat.src = url;
-    cat.style.cursor = 'pointer';
-}
+        async function getNewCat() {
+            const response = await fetch("https://api.thecatapi.com/v1/images/search", {
+                headers: {
+                    'x-api-key': 'live_j4U9P1tus6pCJkgLvEvldbtR584RY9guwoBaWsISPBiaJnsuHHCzQaWaWGeRCW7W'
+                }
+            });
+            const jsonData = await response.json();
+            const url = jsonData[0].url;
+            cat.src = url;
+        }
 
-// Initial calls
-getNewDog();
-getNewCat();
+        function vote(animal) {
+            if (animal === 'dog') {
+                dogScore++;
+            } else if (animal === 'cat') {
+                catScore++;
+            }
+
+            round++;
+            if (round === 5) {
+                showResult();
+            } else {
+                getNewDog();
+                getNewCat();
+            }
+        }
+
+        function showResult() {
+            let dogResultText, catResultText;
+            if (dogScore > catScore) {
+                dogResultText = "Dog Wins!";
+                catResultText = "Dog Wins!";
+            } else if (catScore > dogScore) {
+                dogResultText = "Cat Wins!";
+                catResultText = "Cat Wins!";
+            } else {
+                dogResultText = "It's a Tie!";
+                catResultText = "It's a Tie!";
+            }
+
+            dogResult.innerText = dogResultText;
+            catResult.innerText = catResultText;
+
+            if (confirm("Game Over!\nDog: " + dogScore + "\nCat: " + catScore + "\nPlay again?")) {
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            dogScore = 0;
+            catScore = 0;
+            round = 0;
+            dogResult.innerText = '';
+            catResult.innerText = '';
+            getNewDog();
+            getNewCat();
+        }
+
+        // Initial calls
+        getNewDog();
+        getNewCat();
